@@ -57,37 +57,74 @@ type Feels =
   | 'hot'
   | 'MOLTEN_LAVA'
 
-// { coord: { lon: -0.12, lat: 51.5 },
-// weather:
-//  [ { id: 803,
-//      main: 'Clouds',
-//      description: 'broken clouds',
-//      icon: '04d' } ],
-// base: 'stations',
-// main:
-//  { temp: 280.45,
-//    pressure: 1036,
-//    humidity: 81,
-//    temp_min: 280.15,
-//    temp_max: 281.15 },
-// visibility: 10000,
-// wind: { speed: 2.6, deg: 250 },
-// clouds: { all: 75 },
-// dt: 1512465600,
-// sys:
-//  { type: 1,
-//    id: 5088,
-//    message: 0.008,
-//    country: 'GB',
-//    sunrise: 1512460184,
-//    sunset: 1512489161 },
-// id: 2634341,
-// name: 'City of Westminster',
-// cod: 200 }
-
 const API_KEY = '6290d4c8aed34915c84cba9277058746'
 const API_BASE = 'http://api.openweathermap.org/data/2.5/weather'
 const url = (u: string) => `${API_BASE}/${u}&APPID=${API_KEY}`
+
+const emojis = {
+  cloud: '☁️',
+  fog: '🌁',
+  sun_with_cloud: '⛅',
+  sun: '☀️',
+  rain_with_cloud: '🌧️',
+  rain_with_sun_and_cloud: '🌦️',
+  thunder: '⚡',
+  snow: '❄️',
+  wind: '💨',
+  umbrella: '☂️',
+  sunnies: '🕶️',
+}
+
+function random<A>(arr: A[]): A {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+
+function iceIceBaby(location: string): string {
+  return `Frostbite inducing ${emojis.snow}`
+}
+
+function nippy(location: string): string {
+  return random([
+    `It's a bit chilly in ${location} today`,
+    `Grab your coat and jacket today if you're headed to ${location} today`,
+    `${location} is looking a little brisk today`,
+  ])
+}
+
+function meh(location: string): string {
+  return 'A bit chilly'
+}
+
+function warmish(location: string): string {
+  return 'A bit chilly'
+}
+
+function hot(location: string): string {
+  return 'A bit chilly'
+}
+
+function moltenLava(location: string): string {
+  return 'A bit chilly'
+}
+
+function feelsToMessage(feels: Feels, location: string): string {
+  switch (feels) {
+    case 'ice_ice_baby':
+      return iceIceBaby(location)
+    case 'nippy':
+      return nippy(location)
+    case 'meh':
+      return meh(location)
+    case 'warmish':
+      return warmish(location)
+    case 'hot':
+      return hot(location)
+    case 'MOLTEN_LAVA':
+      return moltenLava(location)
+    default:
+      return ''
+  }
+}
 
 function getWeather(location: LatLong): Promise<WeatherResponse> {
   return axios
@@ -127,9 +164,7 @@ function getLocation(): Promise<LatLong> {
 }
 
 function formatWeather(weather: WeatherResponse): string {
-  return `
-    The weather in ${weather.name} is ${getFeels(weather.main.temp)}
-  `
+  return feelsToMessage(getFeels(weather.main.temp), weather.name)
 }
 
 async function wtf() {
