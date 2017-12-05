@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as spin from 'ora'
-import * as colors from 'colors'
+import colors from 'chalk'
+import * as dates from 'date-fns'
 
 type LatLong = [number, number]
 interface Coord {
@@ -75,65 +76,97 @@ const emojis = {
   sunnies: '🕶️',
 }
 
+function capitalizeFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+}
+
 function random<A>(arr: A[]): A {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
-function iceIceBaby(location: string): string {
-  return `Frostbite inducing ${emojis.snow}`
-}
-
-function nippy(location: string): string {
+function iceIceBaby(): string {
   return random([
-    `It's a bit chilly in ${location} today`,
-    `Grab your coat and jacket today if you're headed to ${location} today`,
-    `${location} is looking a little brisk today`,
+    `Don't even bother heading out today. It's 'effing freezing.`,
+    `You ain't no polar bear, bro. Stay indoors, stay safe.`,
+    `Your outies gonna turn in to an innie today...`,
   ])
 }
 
-function meh(location: string): string {
-  return 'A bit chilly'
+function nippy(): string {
+  return random([
+    `It's a 'lil nippy today.`,
+    `Grab your coat and scarf today.`,
+    `It's looking a 'lil brisk today.`,
+  ])
 }
 
-function warmish(location: string): string {
-  return 'A bit chilly'
+function meh(): string {
+  return random([
+    `Meh. Just meh...`,
+    `Okay, I 'spose.`,
+    `Neither here nor there today.`,
+  ])
 }
 
-function hot(location: string): string {
-  return 'A bit chilly'
+function warmish(): string {
+  return random([
+    `Luke warm today. Hey Luke!`,
+    `Probably t-shirt & shorts.`,
+    `Get 'dem legs out.`,
+  ])
 }
 
-function moltenLava(location: string): string {
-  return 'A bit chilly'
+function hot(): string {
+  return random([
+    `Get your tan on bro.`,
+    `Factor 35, yo.`,
+    `Get 'dem sunnies out! ${emojis.sunnies}`,
+  ])
 }
 
-function feelsToMessage(feels: Feels, location: string): string {
+function moltenLava(): string {
+  return random([
+    `OWCH, MY 'EFFIN EYES ARE MELTING!`,
+    `You'll look like a lobster if you head out today.`,
+    `GET THAT 'EFFIN AC ON NOW!`,
+  ])
+}
+
+function feelsToMessage(feels: Feels): string {
   switch (feels) {
     case 'ice_ice_baby':
-      return iceIceBaby(location)
+      return iceIceBaby()
     case 'nippy':
-      return nippy(location)
+      return nippy()
     case 'meh':
-      return meh(location)
+      return meh()
     case 'warmish':
-      return warmish(location)
+      return warmish()
     case 'hot':
-      return hot(location)
+      return hot()
     case 'MOLTEN_LAVA':
-      return moltenLava(location)
+      return moltenLava()
     default:
       return ''
   }
 }
 
-function getWeather(location: LatLong): Promise<WeatherResponse> {
+function highsAndLowsMessage(temps: WeatherResponse['main']): string {
+  return `Highs of ${kelvinToCelcius(temps.temp_max)}°C, lows of ${kelvinToCelcius(temps.temp_min)}°C.`
+}
+
+const title = colors.whiteBright.underline.bold(`What's the forecast?`)
+
+function subheading(location: string) {
+  const now = dates.format(new Date(), 'h:ma, dddd do MMMM YYYY')
+  return colors.italic.grey(`${location}, ${now}`)
+}
+
+function getWeather(latlong: LatLong): Promise<WeatherResponse> {
   return axios
-    .get(url(`?lat=${location[0]}&lon=${location[1]}`))
+    .get(url(`?lat=${latlong[0]}&lon=${latlong[1]}`))
     .then(resp => resp.data)
-    .catch(err => {
-      console.error(err.response)
-      return err
-    })
+    .catch(console.error)
 }
 
 function kelvinToCelcius(kelvin: number): number {
@@ -163,21 +196,27 @@ function getLocation(): Promise<LatLong> {
   })
 }
 
-function formatWeather(weather: WeatherResponse): string {
-  return feelsToMessage(getFeels(weather.main.temp), weather.name)
+function logWeatherMessage(wttr: WeatherResponse) {
+  const weather = [
+    `${capitalizeFirstLetter(wttr.weather[0].description)}.`,
+    feelsToMessage(getFeels(wttr.main.temp)),
+    highsAndLowsMessage(wttr.main),
+  ].join(' ')
+  const now = subheading(wttr.name)
+  console.log(title)
+  console.log(now)
+  console.log(weather)
 }
 
-async function wtf() {
+async function go() {
   const spinner = spin()
-  spinner.start(colors.cyan('Getting zee weather'))
+  spinner.start('WTF is taking so long?!')
   return getWeather(await getLocation())
     .then(weather => {
       spinner.stop()
-      console.log(formatWeather(weather))
+      logWeatherMessage(weather)
     })
-    .catch(() => {
-      spinner.stop()
-    })
+    .catch(spinner.stop)
 }
 
-wtf()
+go()
