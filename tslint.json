@@ -1,0 +1,6 @@
+{
+  "rules": {
+    "no-submodule-imports": false
+  },
+  "extends": ["tslint-config-prettier"]
+}
