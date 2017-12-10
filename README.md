@@ -2,6 +2,8 @@
 
 Terminal weather, yo.
 
+![wtf](example.png)
+
 ### Installation
 
 ```bash

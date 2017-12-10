@@ -69,6 +69,11 @@ export function getWeather(latlong: Types.LatLong): Promise<Types.WeatherRespons
       return axios
         .get(url(`/weather?lat=${latlong[0]}&lon=${latlong[1]}`, key))
         .then(resp => resp.data)
-        .catch(console.error)
+        .catch(err => {
+          return Utils.err({
+            code: 400,
+            type: 'invalid_key'
+          })
+        })
     })
 }

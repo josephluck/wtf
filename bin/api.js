@@ -72,7 +72,12 @@ function getWeather(latlong) {
         .then(function (key) {
         return axios_1["default"]
             .get(url("/weather?lat=" + latlong[0] + "&lon=" + latlong[1], key))
-            .then(function (resp) { return resp.data; })["catch"](console.error);
+            .then(function (resp) { return resp.data; })["catch"](function (err) {
+            return Utils.err({
+                code: 400,
+                type: 'invalid_key'
+            });
+        });
     });
 }
 exports.getWeather = getWeather;
