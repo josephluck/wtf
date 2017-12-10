@@ -96,6 +96,6 @@ export function title () {
 }
 
 export function subheading(location: string) {
-  const now = dates.format(new Date(), 'h:ma, dddd do MMMM YYYY')
+  const now = dates.format(new Date(), 'h:ma, dddd Do MMMM YYYY')
   return colors.italic.grey(`${location}, ${now}`)
 }

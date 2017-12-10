@@ -12,7 +12,6 @@ export function getLatLong(): Promise<Types.LatLong> {
   })
 }
 
-// 6290d4c8aed34915c84cba9277058746
 export function storeApiKey(key: string): Promise<string> {
   return new Promise((resolve, reject) => {
     if (key) {

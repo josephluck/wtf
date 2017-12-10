@@ -1,12 +1,15 @@
 {
   "name": "wtf-js",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.5",
+  "description": "Terminal Weather Yo.",
   "main": "./bin/wtf.js",
   "preferGlobal": true,
   "engines": {
     "node": ">= 4"
   },
+  "files": [
+    "bin"
+  ],
   "scripts": {
     "wtf": "npm run build && npm run weather",
     "build": "tsc",
@@ -19,7 +22,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/chalk": "^2.2.0",
     "@types/colors": "^1.1.3",
     "@types/ora": "^1.3.1",
     "@types/yargs": "^10.0.0",
@@ -29,7 +31,6 @@
     "ora": "^1.3.0",
     "prettier": "^1.9.0",
     "ts-node": "^3.3.0",
-    "tsc": "^1.20150623.0",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.6.0",
     "typescript": "^2.6.2",
