@@ -60,3 +60,20 @@ export type Feels =
   | 'warmish'
   | 'hot'
   | 'MOLTEN_LAVA'
+
+interface BaseErr {
+  code: number,
+  type: string
+}
+
+interface ErrInvalidApiKey extends BaseErr {
+  code: 400,
+  type: 'invalid_key'
+}
+
+interface ErrNoApiKey extends BaseErr {
+  code: 400,
+  type: 'no_api_key'
+}
+
+export type WtfErr = ErrNoApiKey | ErrInvalidApiKey

@@ -28,3 +28,7 @@ export function kelvinToFeels(kelvin: number): Types.Feels {
     return 'MOLTEN_LAVA'
   }
 }
+
+export function err(e: Types.WtfErr): Types.WtfErr {
+  return e
+}

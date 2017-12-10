@@ -5,6 +5,7 @@ import * as Types from './types'
 import * as api from './api'
 import * as messages from './messages'
 import * as utils from './utils'
+import { argv } from 'yargs'
 
 function currentWeather(wttr: Types.WeatherResponse) {
   const weather = [
@@ -18,15 +19,32 @@ function currentWeather(wttr: Types.WeatherResponse) {
   console.log(weather)
 }
 
+function handleError(e: Types.WtfErr) {
+  if (e.type === 'no_api_key') {
+    console.error('No API key stored. Grab one from http://openweathermap.org/appid and enter it using "wtf --key my-api-key"')
+  } else {
+    console.error(`WTF! Something went wrong`)
+  }
+}
+
 async function go() {
   const spinner = spin()
+  if (argv.key) {
+    await api.storeApiKey(argv.key).catch(err => {
+      spinner.stop()
+      handleError(err)
+    })
+  }
   spinner.start('WTF is taking so long?!')
   return api.getWeather(await api.getLatLong())
     .then(weather => {
       spinner.stop()
       currentWeather(weather)
     })
-    .catch(spinner.stop)
+    .catch(err => {
+      spinner.stop()
+      handleError(err)
+    })
 }
 
 go()
