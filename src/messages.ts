@@ -33,6 +33,7 @@ export function nippy(): string {
     `It's a 'lil nippy today.`,
     `Grab your coat and scarf today.`,
     `It's looking a 'lil brisk today.`,
+    `If you like weather like this, you're an 'effin idiot.`
   ])
 }
 
@@ -65,6 +66,7 @@ export function moltenLava(): string {
     `OWCH, MY 'EFFIN EYES ARE MELTING!`,
     `You'll look like a lobster if you head out today.`,
     `GET THAT 'EFFIN AC ON NOW!`,
+    'How do meteorologists say high? With a heat wave.',
   ])
 }
 
@@ -96,6 +98,6 @@ export function title () {
 }
 
 export function subheading(location: string) {
-  const now = dates.format(new Date(), 'h:ma, dddd Do MMMM YYYY')
+  const now = dates.format(new Date(), 'h:mma, dddd Do MMMM YYYY')
   return colors.italic.grey(`${location}, ${now}`)
 }
