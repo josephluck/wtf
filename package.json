@@ -1,6 +1,6 @@
 {
   "name": "wtf-js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Terminal Weather Yo.",
   "main": "./bin/wtf.js",
   "preferGlobal": true,

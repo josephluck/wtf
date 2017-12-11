@@ -2,6 +2,7 @@ import axios from 'axios'
 import * as Types from './types'
 import * as Utils from './utils'
 import * as fs from 'fs'
+import * as path from 'path'
 
 const API_BASE = 'http://api.openweathermap.org/data/2.5'
 const url = (u: string, k: string) => `${API_BASE}/${u}&APPID=${k}`
@@ -16,7 +17,7 @@ export function storeApiKey(key: string): Promise<string> {
   return new Promise((resolve, reject) => {
     if (key) {
       try {
-        fs.writeFileSync('./key.txt', key)
+        fs.writeFileSync(path.normalize(`${__dirname}/key.txt`), key)
         const k = fs.readFileSync('./key.txt')
         if (k) {
           resolve(key.toString())
@@ -45,7 +46,7 @@ export function storeApiKey(key: string): Promise<string> {
 export function getApiKey(): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
-      const key = fs.readFileSync('./key.txt')
+      const key = fs.readFileSync(`${__dirname}/key.txt`)
       if (key) {
         resolve(key.toString())
       } else {
