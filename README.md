@@ -1,4 +1,4 @@
-# What The Forecast?
+# What's The Forecast?
 
 Terminal weather, yo.
 
